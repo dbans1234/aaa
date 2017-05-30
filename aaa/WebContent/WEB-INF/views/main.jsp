@@ -5,29 +5,53 @@
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <link rel="stylesheet" href="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/tt.css" />
 <script src="//code.jquery.com/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
 $( function() {
-   $( ".outputDiv" ).draggable({revert:"invalid"});
+   $( ".outDataDiv" ).draggable({revert:"invalid"});
+   $( ".panel" ).droppable({
+	      drop: function( event, ui ) {
+	    	  var s=$(".outDataDiv").html();
+	    	 	$(this).append($(".outDataDiv").html());
+	    	 	$(".outputDiv").empty(); $(".tableAddBtn").removeAttr('disabled');
+	    	 	$(".outputDiv").html("<div class='outDataDiv'></div>"); $(".outputDiv").css("display","none")
+	    	 	$(this).find("a").removeClass("closeTable").addClass("closeData")
+		}});
    $("#openbar").click(function(){
 		$("#mySidenav").css("width","250px")
 	})
 	$(".closebtn").click(function(){
 		$("#mySidenav").css("width","0")
 	})
-	$(".tableAddBtn").click(function(){
-		var str="<div class='tableAll'><div class='tableName'>"+$("#tableNameInput").val();
-		str+="<a class='closeTable'>&times;</a></div>"
-//		$(".outputDiv").fadeIn(function(){$(".outputDiv").append(str)})
-		$(".outputDiv").append(str).fadeIn(2000).fadeOut();
-		$(".tableAddBtn").attr('disabled',true);
-	})
 } );
+// 닫기 버튼
+$(document).on("click",".closeTable",function(){
+	$(".outputDiv").fadeOut(function(){	$(".outDataDiv").empty();}); $(".tableAddBtn").removeAttr('disabled')
+})
+// 데이터 닫기 버튼
+$(document).on("click",".closeData",function(){
+	$(this).parent().parent().fadeOut(function(){$(this).remove();}); $(".tableAddBtn").removeAttr('disabled')
+})
+// 추가 버튼
+$(document).on("click",".tableAddBtn",function(){
+	var str="<div class='tableAll'><div class='tableName'>"+$("#tableNameInput").val();
+	str+="<a class='closeTable'>&times;</a></div>"
+//	$(".outputDiv").fadeIn(function(){$(".outputDiv").append(str)})
+	$(".outDataDiv").append(str);     $(".outputDiv").fadeIn()
+	$(".tableAddBtn").attr('disabled',true);
+	 $( ".outDataDiv" ).draggable({revert:"invalid"});
+}) 
 </script>
 <style>
-.tableName{border:1px solid; text-align:center; max-width:300px;}
+.outDataDiv{border:1px solid; text-align:center; max-width:300px;}
+button.accordion {background-color: #eee;color: #444;cursor: pointer; padding: 18px; width: 100%; border: none; text-align: left; outline: none;font-size: 15px; transition: 0.4s;}
+button.accordion.active, button.accordion:hover {background-color: #ddd;}
+div.panel {padding: 0 18px; background-color: white; max-height: 0;overflow: hidden;transition: max-height 0.2s ease-out; min-height:20px;}
+
+.deptDiv{float:right;}
 .sidenav {
     height: 100%;
     width: 0;
@@ -68,8 +92,7 @@ $( function() {
 
 /*           */
 .inputDiv{margin:7px 7px; height:100%;}
-.outputDiv{display:none;margin:7px 7px; height:100%;}
-
+.outputDiv{display:none;margin:7px 7px; height:100%; z-index:99;}
 
 
 </style>
@@ -88,8 +111,28 @@ $( function() {
 	    <br>
 	    <button class="btn btn-primary tableAddBtn">추가</button>
   	</div>
-  	<div class="col-md-8 outputDiv" id="outputDiv">
+  	
+  	<div class="col-md-5 outputDiv" id="outputDiv">
+  		<div class="outDataDiv"></div>
   	</div>
+  	
+  	<div class="col-md-4 deptDiv">
+  		<button class="accordion">Section 1</button>
+		<div class="panel">
+		</div>
+		
+		<button class="accordion">Section 2</button>
+		<div class="panel">
+		 	이
+		</div>
+		
+		<button class="accordion">Section 3</button>
+		<div class="panel">
+		  	스
+		</div>
+  	</div>
+  	
+  	
 </div>
 
 
@@ -105,3 +148,30 @@ $( function() {
 </div>
 </body>
 </html>
+
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].onclick = function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight){
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    } 
+  }
+}
+</script>
+
+
+
+/* 	$(".tableAddBtn").click(function(){
+		var str="<div class='tableAll'><div class='tableName'>"+$("#tableNameInput").val();
+		str+="<a class='closeTable'>&times;</a></div>"
+//		$(".outputDiv").fadeIn(function(){$(".outputDiv").append(str)})
+		$(".outDataDiv").append(str);$(".outputDiv").fadeIn()
+		$(".tableAddBtn").attr('disabled',true);
+	}) */
