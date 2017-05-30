@@ -18,7 +18,9 @@ $( function() {
 	    	 	$(this).append($(".outDataDiv").html());
 	    	 	$(".outputDiv").empty(); $(".tableAddBtn").removeAttr('disabled');
 	    	 	$(".outputDiv").html("<div class='outDataDiv'></div>"); $(".outputDiv").css("display","none")
+	    	 	
 	    	 	$(this).find("a").removeClass("closeTable").addClass("closeData")
+	    	 	$(this).find("div").removeClass("tableAll").addClass("dataAll")
 		}});
    $("#openbar").click(function(){
 		$("#mySidenav").css("width","250px")
@@ -29,12 +31,17 @@ $( function() {
 } );
 // 닫기 버튼
 $(document).on("click",".closeTable",function(){
-	$(".outputDiv").fadeOut(function(){	$(".outDataDiv").empty();}); $(".tableAddBtn").removeAttr('disabled')
+	$(".outputDiv").fadeOut(function(){$(".outDetailDiv").empty();	$(".outDataDiv").empty();}); $(".tableAddBtn").removeAttr('disabled')
 })
 // 데이터 닫기 버튼
 $(document).on("click",".closeData",function(){
 	$(this).parent().parent().fadeOut(function(){$(this).remove();}); $(".tableAddBtn").removeAttr('disabled')
 })
+//상세 닫기 버튼
+$(document).on("click",".closeDetail",function(){
+	$(this).parent().fadeOut(function(){$(this).remove()})
+})
+
 // 추가 버튼
 $(document).on("click",".tableAddBtn",function(){
 	var str="<div class='tableAll'><div class='tableName'>"+$("#tableNameInput").val();
@@ -42,15 +49,22 @@ $(document).on("click",".tableAddBtn",function(){
 //	$(".outputDiv").fadeIn(function(){$(".outputDiv").append(str)})
 	$(".outDataDiv").append(str);     $(".outputDiv").fadeIn()
 	$(".tableAddBtn").attr('disabled',true);
+	$(".detailInfo").css("display","block");
 	 $( ".outDataDiv" ).draggable({revert:"invalid"});
 }) 
+//상세 추가 버튼
+$(document).on("click",".detailAddBtn",function(){
+	var str="<div class='detailData'>"+$("#detailInput").val()+"<a class='closeDetail'>&times;</a></div>"
+	$(".outDetailDiv").append(str);
+})
+
 </script>
 <style>
 .outDataDiv{border:1px solid; text-align:center; max-width:300px;}
 button.accordion {background-color: #eee;color: #444;cursor: pointer; padding: 18px; width: 100%; border: none; text-align: left; outline: none;font-size: 15px; transition: 0.4s;}
 button.accordion.active, button.accordion:hover {background-color: #ddd;}
 div.panel {padding: 0 18px; background-color: white; max-height: 0;overflow: hidden;transition: max-height 0.2s ease-out; min-height:20px;}
-
+.detailInfo{display:none;}
 .deptDiv{float:right;}
 .sidenav {
     height: 100%;
@@ -110,10 +124,18 @@ div.panel {padding: 0 18px; background-color: white; max-height: 0;overflow: hid
 	    <input type="text" class="form-control" id="tableNameInput" placeholder="테이블 이름을 입력하세요">
 	    <br>
 	    <button class="btn btn-primary tableAddBtn">추가</button>
+	    
+	    <div class="detailInfo">
+	      <label for="exampleInputEmail1">상세</label>
+	    <input type="text" class="form-control" id="detailInput" placeholder="상세 정보를 입력하세요">
+	    <br>
+	    <button class="btn btn-primary detailAddBtn">추가</button>
+	    </div>
   	</div>
   	
   	<div class="col-md-5 outputDiv" id="outputDiv">
-  		<div class="outDataDiv"></div>
+  		<div class="outDataDiv"></div>	
+  		<div class="outDetailDiv"></div>
   	</div>
   	
   	<div class="col-md-4 deptDiv">
@@ -165,13 +187,3 @@ for (i = 0; i < acc.length; i++) {
   }
 }
 </script>
-
-
-
-/* 	$(".tableAddBtn").click(function(){
-		var str="<div class='tableAll'><div class='tableName'>"+$("#tableNameInput").val();
-		str+="<a class='closeTable'>&times;</a></div>"
-//		$(".outputDiv").fadeIn(function(){$(".outputDiv").append(str)})
-		$(".outDataDiv").append(str);$(".outputDiv").fadeIn()
-		$(".tableAddBtn").attr('disabled',true);
-	}) */
